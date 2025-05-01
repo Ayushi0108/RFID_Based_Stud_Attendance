@@ -1,0 +1,39 @@
+
+
+<html>
+<style>
+    table,
+    th,
+    td {
+        border: 1px solid black;
+    }
+</style>
+
+<body>
+    <table >
+        <thead style="color: #1d3557;">
+            <tr>
+            
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Attended Lectures</th>
+                <th scope="col">Percentage</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for r in record %}
+            <tr>
+               
+                <td>{{r.sid}}</td>
+                <td>{{r.sname}}</td>
+                <td>{{r.stot_lect}}</td>
+                <td>{{r.sper}}%</td>
+                
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+</body>

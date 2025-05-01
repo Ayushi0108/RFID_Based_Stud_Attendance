@@ -1,0 +1,199 @@
+<!--  -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'teacher_dashboard/assets/favicon-32x32.png' %}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Bellefair&family=Barlow:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- Our custom CSS -->
+  <link rel="stylesheet" href="{% static 'teacher_dashboard/dashboard.css' %}">
+
+  <title>Teacher Dashboard</title>
+  <script src="{% static 'teacher_dashboard/dashboard.js' %}" defer></script>
+</head>
+
+
+<style>
+  .dbtn {
+    border-color: #1d3557;
+    padding: 7px 7px 7px 7px;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .dbtn:hover {
+    background-color: #7fa7e0;
+    cursor: pointer;
+  }
+</style>
+
+<body class="home">
+  <a class="skip-to-content" href="#main">Skip to content</a>
+  <header class="primary-header flex">
+    <div>
+      <img src="{% static 'teacher_dashboard/assets/shared/logo.svg' %}" alt="Shree" class="logo">
+    </div>
+    <button class="mobile-nav-toggle" aria-controls="primary-navigation"><span class="sr-only"
+        aria-expanded="false">Menu</span></button>
+    <nav>
+      <ul id="primary-navigation" data-visible="false" class="primary-navigation underline-indicators flex">
+        <li class="active"><a class="ff-sans-cond uppercase text-white letter-spacing-2" href="#footer">
+          <span aria-hidden="true">00</span>About Us</a>
+        <li ><a class="ff-sans-cond uppercase text-white letter-spacing-2" href="{% url 'change_pass' %}">
+          <span aria-hidden="true">01</span>Change Password</a>
+        <li><a class="ff-sans-cond uppercase text-white letter-spacing-2" href="{% url 'logout' %}">
+          <span aria-hidden="true">02</span>Logout</a>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="grid-container grid-container--home">
+    <div>
+      <h1 class="text-accent fs-500 ff-sans-cond uppercase letter-spacing-1">Attendance system using
+        <span class="d-block fs-900 ff-serif text-white">RFID</span>
+      </h1>
+
+      <p style="font-size:x-large;">Welcome, {{username}}</p>
+      <p style="font-size:x-large;">Classes conducted: {{total_lecture}}</p>
+      <p style="font-size:x-large;">Course code: {{course_code}}</p>
+      <p style="font-size:x-large;">Course name: {{course_name}}</p>
+      <p style="font-size:x-large;">Total students: {{total_students}}</p>
+      <!-- <h4>Teacher Name : Prof. Minlinde W.</h4> -->
+    </div>
+
+    <!-- Graph code starts here -->
+    <!-- I have used Canvasjs for this it is a Proprietary software -->
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+    <!-- Graph code ends here -->
+  </main>
+
+
+  <table>
+    <caption>Date : {{today_date}} 
+      
+      <button onclick="download();" class="dbtn" style="float: right;"><i class="fa fa-download"
+          style="font-size:medium;"></i>&nbsp;
+        Download Sheet</button>
+        <button onclick="send_mail()" class="dbtn" style="float: right; margin-right: 5%;"><i class="fa fa-envelope"
+          style="font-size:medium;"></i>&nbsp;
+        Send Mail to Detained Students</button>
+      
+      </caption>
+
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Attended Lectures</th>
+      <th>Percentage</th>
+
+    </tr>
+    {% for r in record %}
+    {% if r.detained_status == 'yes'%}
+    <tr style="color: orange;">
+      <td data-cell="ID">{{r.sid}}</td>
+      <td data-cell="Name">{{r.sname}}</td>
+      <td data-cell="Attended Lectures">{{r.stot_lect}}</td>
+      <td data-cell="Percentage">{{r.sper}}%</td>
+
+    </tr>
+    {% else %}
+    <tr>
+      <td data-cell="ID">{{r.sid}}</td>
+      <td data-cell="Name">{{r.sname}}</td>
+      <td data-cell="Attended Lectures">{{r.stot_lect}}</td>
+      <td data-cell="Percentage">{{r.sper}}%</td>
+
+    </tr>
+    {% endif %}    
+    {% endfor %}
+
+
+    </tbody>
+
+  </table>
+  <footer id="footer">
+    <div class="container">
+      <p><span style="color: orange;font-weight: bold;">Note:</span> Orange refers to detained students</p>
+      <br/>
+      <p>&copy; 2024 Dashboard for our project</p>
+      <br><br>
+      <p>Team members:</p>
+      <br>
+      <p>1. Abhinav Dixit - 20005068</p>
+      <p>2. Ayushi Thakur - 21105001</p>
+      <p>3. Sarthak Shelke - 21105002</p>
+      <p>4. Gitika Dhole - 20005020</p>
+      <p>5. Aryan Ghai - 20005027</p>
+    </div>
+  </footer>
+
+</body>
+
+<script type="text/javascript" data-graph="{{graph_data}}">
+        
+  function download() {
+    document.location.href = "{% url 'download'  %}";
+  }
+  function send_mail() {
+    document.location.href = "{% url 'send_mail'  %}";
+  }
+  const data = document.currentScript.dataset;
+  //console.log(data.graph);
+  var arr = JSON.parse(data.graph)
+  var y_axis=[]
+  for (let index = 0; index < arr.length; index++) {
+    y_axis[index] = {y:arr[index]}
+  }
+  //console.log(arr[1]);
+  //Graph data
+  window.onload = function () {
+    
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        theme: "light2",
+        title:{
+            text: "Attendance Record"
+        },
+       // axisX:{
+        //  valueFormatString: "DD MMM"
+        //},
+        data: [{        
+              type: "line",
+              indexLabelFontSize: 16,
+              dataPoints: y_axis//[
+                
+                //{ y: arr[0] },
+                //{ y: 414},
+                //{ y: 520, indexLabel: "\u2191 highest",markerColor: "red", markerType: "triangle" },
+                //{ y: 490 },
+                //{ y: 450 },
+                //{ y: 500 },
+                //{ y: 480 },
+                //{ y: 480 },
+                //{ y: 410 , indexLabel: "\u2193 lowest",markerColor: "DarkSlateGrey", markerType: "cross" },
+                //{ y: 500 },
+                //{ y: 480 },
+                //{ y: 510 }
+            //]
+        }]
+    });
+    chart.render();
+}
+  
+</script>
+
+</html>

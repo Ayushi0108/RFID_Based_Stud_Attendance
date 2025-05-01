@@ -1,0 +1,146 @@
+<!--  -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'student_dashboard/assets/favicon-32x32.png' %}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Bellefair&family=Barlow:wght@400;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- Our custom CSS -->
+  <link rel="stylesheet" href="{% static 'student_dashboard/dashboard.css' %}">
+
+  <title>Student Dashboard</title>
+  <script src="{% static 'student_dashboard/dashboard.js' %}" defer></script>
+</head>
+
+
+<style>
+  .dbtn {
+    border-color: #1d3557;
+    padding: 7px 7px 7px 7px;
+    border-radius: 5px;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .dbtn:hover {
+    background-color: #7fa7e0;
+    cursor: pointer;
+  }
+</style>
+
+<body class="home">
+  <a class="skip-to-content" href="#main">Skip to content</a>
+  <header class="primary-header flex">
+    <div>
+      <img src="{% static 'student_dashboard/assets/shared/logo.svg' %}" alt="Shree" class="logo">
+    </div>
+    <button class="mobile-nav-toggle" aria-controls="primary-navigation"><span class="sr-only"
+        aria-expanded="false">Menu</span></button>
+    <nav>
+      <ul id="primary-navigation" data-visible="false" class="primary-navigation underline-indicators flex">
+        <li class="active"><a class="ff-sans-cond uppercase text-white letter-spacing-2" href="#footer">
+          <span aria-hidden="true">00</span>About Us</a>
+        <li ><a class="ff-sans-cond uppercase text-white letter-spacing-2" href="{% url 'change_pass' %}">
+          <span aria-hidden="true">01</span>Change Password</a>
+        <li><a class="ff-sans-cond uppercase text-white letter-spacing-2" href="{% url 'logout' %}">
+          <span aria-hidden="true">02</span>Logout</a>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main" class="grid-container grid-container--home">
+    <div>
+      <h1 class="text-accent fs-500 ff-sans-cond uppercase letter-spacing-1">Attendance system using
+        <span class="d-block fs-700 ff-serif text-white">RFID</span>
+      </h1>
+
+      <p style="font-size:x-large;"><span style="font-weight: bold;">Welcome,</span> &nbsp;{{username}}</p>
+      <p style="font-size:x-large;"><span style="font-weight: bold;">Roll number:</span> {{roll_number}}</p>
+      <p style="font-size:x-large;"><span style="font-weight: bold;">Registered Courses:</span> 
+        {% for c in courses %}
+        <br/> > {{c}}
+        {% endfor %}
+
+      </p>
+      <!-- <p style="font-size:x-large;">Course name: {{course_name}}</p>
+      <p style="font-size:x-large;">Total students: {{total_students}}</p> -->
+    </div>
+    <div></div> <!-- LOL this empty div makes the above div in left -->
+    <!-- Graph code starts here -->
+    <!-- I have used Canvasjs for this it is a Proprietary software -->
+    <!-- <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+    <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script> -->
+    <!-- Graph code ends here -->
+  </main>
+
+
+  <table>
+     <caption style="flex-direction: row;">Date : {{today_date}} 
+      <!-- <div>|Note: Orange indicated 'Detained Subject'</div> -->
+      <!-- Whether to show date or not on student dashboard ? -->
+       <!-- <button onclick="download();" class="dbtn" style="float: right;"><i class="fa fa-download"
+          style="font-size:medium;"></i>&nbsp;
+        Download Sheet</button>
+        <button onclick="send_mail()" class="dbtn" style="float: right; margin-right: 5%;"><i class="fa fa-envelope"
+          style="font-size:medium;"></i>&nbsp;
+        Send Mail to Detained Students</button>  -->
+      </caption> 
+    <tr>
+      <th>Course Code</th>
+      <th>Course Name</th>
+      <th>Attended Lectures</th>
+      <th>Total Lectures</th>
+      <th>Percentage</th>
+    </tr>
+    {% for r in record %}
+    {% if r.detained_status == 'yes'%}
+    <tr style="color: orange;">
+      <td data-cell="Course Code">{{r.cid}}</td>
+      <td data-cell="Course Name">{{r.cname}}</td>
+      <td data-cell="Attended Lectures">{{r.stot_lect}}</td>
+      <td data-cell="Total Lectures">{{r.total_lect}}</td>
+      <td data-cell="Percentage">{{r.sper}}%</td>
+    </tr>
+    {% else %}
+    <tr>
+      <td data-cell="Course Code">{{r.cid}}</td>
+      <td data-cell="Course Name">{{r.cname}}</td>
+      <td data-cell="Attended Lectures">{{r.stot_lect}}</td>
+      <td data-cell="Total Lectures">{{r.total_lect}}</td>
+      <td data-cell="Percentage">{{r.sper}}%</td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+    </tbody>
+  </table>
+  <footer id="footer">
+    <div class="container">
+      <p><span style="color: orange;font-weight: bold;">Note:</span> 
+        Orange refers to detained subjects</p>
+      <br/>
+      <p>&copy; 2024 Dashboard for our project</p>
+      <br><br>
+      <p>Team members:</p>
+      <br>
+      <p>1. Abhinav Dixit - 20005068</p>
+      <p>2. Ayushi Thakur - 21105001</p>
+      <p>3. Sarthak Shelke - 21105002</p>
+      <p>4. Gitika Dhole - 20005020</p>
+      <p>5. Aryan Ghai - 20005027</p>
+    </div>
+  </footer>
+
+</body>
+</html>
